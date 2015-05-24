@@ -61,4 +61,27 @@ p-value = 0.001374 is less then 0.05, so we reject the null hypothesis that ther
 
 ### Quantify the MPG difference between automatic and manual transmissions.
 
+Lets check how all variables affect mpg difference by fitting corresponding linear model.
+```{r}
+fit_all = lm(data = mtcars, mpg ~ .)
+summary(fit_all)
+```
+As we can see there are 2 predictor variables: wt (Weight) and am (Transmission type) which affects mpg variance at most.
 
+Lets try to choose the best set of predictors automatically.
+```{r}
+fit_best = step(lm(data = mtcars, mpg ~ .), trace=0)
+summary(fit_best)
+```
+It looks like the best model is the one that includes wt, qsec and am, which means besides transmission types, weight and accelearation also needs to be considered. Weight negatively changes with mpg, and qsec and am positively changes. Every lb/1000 weight increase will cause a decrease of roughly 4 mpg, every increase of 1/4 mile time will cause an increase of 1.2 mpg, and on average, manual transmission is 2.9 mpg better than automatic transmission. The model is able to explain 85% of variance. The residual plots also seems to be randomly scattered (see appendix).
+
+###Conclusion
+As a result of analysis it can be concluded that manual transmission is better than automatic transmission by 2.9 mpg. However, transmission type is not the only factor accounting for MPG, weight, and acceleration (1/4 mile time) also needs to be considered.
+
+###Appendix
+
+Residual plots
+
+```{r}
+plot(fit_best)
+```
