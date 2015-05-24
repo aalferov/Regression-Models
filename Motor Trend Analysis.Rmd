@@ -1,0 +1,64 @@
+---
+title: "Motor Trend Analysis"
+author: "Andrey Alferov"
+date: "Sunday, May 24, 2015"
+output:
+  pdf_document:
+    latex_engine: xelatex
+---
+
+## Executive summary
+You work for Motor Trend, a magazine about the automobile industry. Looking at a data set of a collection of cars, they are interested in exploring the relationship between a set of variables and miles per gallon (MPG) (outcome). They are particularly interested in the following two questions:
+
+1. “Is an automatic or manual transmission better for MPG”
+2. “Quantify the MPG difference between automatic and manual transmissions”
+
+## Data Processing
+The data was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973–74 models).
+
+```{r, warning=FALSE}
+library(datasets)
+library(ggplot2)
+library(dplyr)
+
+data(mtcars) #Load mtcars dataset
+```
+
+Let's have a brief look at mtcars dataset.
+```{r}
+head(mtcars)
+
+dim(mtcars)
+
+summary(mtcars)
+```
+
+The dataset consists of 32 observations on 11 variables. 
+
+## Analysis
+
+### Is an automatic or manual transmission better for MPG?
+To answer that question lets compare average mpg for automatic and manual transmissions.
+```{r}
+mean(filter(mtcars, am == 1)$mpg) #Calculate mean mpg for manual transmission
+mean(filter(mtcars, am == 0)$mpg) #Calculate mean mpg for automatic transmission
+```
+As we can see cars with manual transmission have greater mpg than cars with manual transmission.
+
+Lets build a boxplot displaying mpg per transmission type.
+```{r}
+p <- ggplot(mtcars, aes(factor(am), mpg))
+p + geom_boxplot() + geom_jitter()
+```
+The plot also prooves that cars with manual transmission type (represented by 1) has a higher mean for mpg than automatic (represented by 0).
+
+Lets perform a t-test to confirm the null hypothesis that transmission type affects mpg.
+```{r}
+t.test(mtcars$mpg ~ mtcars$am, conf.level=0.95)
+```
+
+p-value = 0.001374 is less then 0.05, so we reject the null hypothesis that there is no difference in MPG per transmission type.
+
+### Quantify the MPG difference between automatic and manual transmissions.
+
+
